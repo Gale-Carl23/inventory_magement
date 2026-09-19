@@ -1,0 +1,11 @@
+{% block title %}
+
+{% endblock %}
+
+{% block content %}
+    <ul>
+    {% for product in products %}
+        <li><a href="{{product.get_absolute_url}}">{{product.name}} - {{product.price}}</a></li>
+    {% endfor %}
+    </ul>
+{% endblock %}
