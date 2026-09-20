@@ -62,5 +62,8 @@ class StockTransaction(models.Model):
 
         super().delete(*args, **kwargs)
 
+    def __str__(self):
+        return f"{self.transaction_name} - {self.type}"
+
 
 
