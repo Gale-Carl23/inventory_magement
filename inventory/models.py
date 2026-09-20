@@ -36,9 +36,14 @@ class Product(models.Model):
 
 
 class StockTransaction(models.Model):
+    TRANSACTION_TYPES = [
+        ("IN", "Stock In"),
+        ("OUT", "Stock Out")
+    ]
+
     transaction_name = models.CharField(max_length=100)
     quantity = models.IntegerField()
-    type = models.
+    type = models.CharField(max_length=3, choices=TRANSACTION_TYPES)
     transaction_date = models.DateField(auto_now_add=True)
     remarks = models.CharField(max_length=250)
     product = models.ForeignKey(Product, related_name="transactions", on_delete=models.CASCADE)
