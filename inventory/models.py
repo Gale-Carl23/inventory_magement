@@ -51,5 +51,16 @@ class StockTransaction(models.Model):
     class Meta:
         verbose_name_plural = "Transactions"
 
+    def delete(self, *args, **kwargs):
+        product = self.product
+
+        if self.type == "IN":
+            product.quantity -= self.quantity
+        elif self.type == "OUT":
+            product.quantity += self.quantity
+        product.save()
+
+        super().delete(*args, **kwargs)
+
 
 
