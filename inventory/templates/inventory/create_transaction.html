@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+
+{% block title %}
+    Create your transaction     
+{% endblock %}
+
+{% block content %}
+    <form action="{% url 'create-transaction' %}" method="POST">
+        {% csrf_token %}
+        {% for field in form %}
+            {{field.label_tag}}
+            {{field}}
+            {{field.errors}}
+        {% endfor %}
+        <button type="Submit">Save Transaction</button>
+    </form>
+{% endblock %}
