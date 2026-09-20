@@ -38,15 +38,10 @@ class Product(models.Model):
 class StockTransaction(models.Model):
     transaction_name = models.CharField(max_length=100)
     quantity = models.IntegerField()
+    type = models.
     transaction_date = models.DateField(auto_now_add=True)
     remarks = models.CharField(max_length=250)
     product = models.ForeignKey(Product, related_name="transactions", on_delete=models.CASCADE)
-
-    def save(self, *args, **kwargs):
-        if not self.pk:
-            self.product.quantity -= self.quantity
-            self.product.save()
-        super().save(*args, **kwargs)
 
     class Meta:
         verbose_name_plural = "Transactions"
