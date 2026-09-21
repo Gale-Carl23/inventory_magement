@@ -4,6 +4,7 @@ from .models import Product
 from django.http import HttpResponseRedirect, JsonResponse
 from .forms import TransactionForm
 from django.views import View
+from django.contrib.auth.mixins import LoginRequiredMixin
 
 # Create your views here.
 class ProductsViewList(ListView):
@@ -11,7 +12,7 @@ class ProductsViewList(ListView):
     model = Product
     context_object_name = "products"
 
-class TransactionView(View):
+class TransactionView(LoginRequiredMixin, View):
     def get(self, request):
         print("GET CALLED")
         transaction_form = TransactionForm()
@@ -25,7 +26,7 @@ class TransactionView(View):
         if posted_form.is_valid():
             transaction = posted_form.save(commit=False)
            
-
+            user = transaction.user
             product = transaction.product
             print("BEFORE", product.quantity)
 
