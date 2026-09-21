@@ -1,5 +1,7 @@
 from django import forms
 from .models import StockTransaction
+from django.contrib.auth.forms import UserCreationForm
+from django.contrib.auth.models import User
 
 class TransactionForm(forms.ModelForm):
     class Meta:
@@ -18,4 +20,8 @@ class TransactionForm(forms.ModelForm):
                 "max_length": {"Character limit."}
             }
         }
-        
+
+class RegisterForm(UserCreationForm):
+    class Meta:
+        model = User
+        fields = ["username", "password1", "password2"]

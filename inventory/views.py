@@ -1,12 +1,25 @@
-from django.shortcuts import render, get_object_or_404
+from django.shortcuts import redirect, render, get_object_or_404
 from django.views.generic import ListView
 from .models import Product
 from django.http import HttpResponseRedirect, JsonResponse
 from .forms import TransactionForm
 from django.views import View
 from django.contrib.auth.mixins import LoginRequiredMixin
+from .forms import RegisterForm
 
 # Create your views here.
+class RegisterView(View):
+    def get(self, request):
+        form = RegisterForm()
+        return render(request, "register.html", {"form": form})
+
+    def post(self, request):
+        form = RegisterForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect("login")
+        return render(request, "register.html", {"form": form})
+
 class ProductsViewList(ListView):
     template_name = "inventory/view_all_products.html"
     model = Product
