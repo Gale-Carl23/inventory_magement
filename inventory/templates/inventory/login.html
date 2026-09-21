@@ -5,6 +5,7 @@
 {% endblock %}
 
 {% block content %}
+    {% include 'inventory/includes/header.html' %}
     <form method="POST">
         {% csrf_token %}
         {{form.as_p}}
