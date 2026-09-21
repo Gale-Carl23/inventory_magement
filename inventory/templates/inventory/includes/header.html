@@ -1,11 +1,14 @@
 <nav>
-    {% if user.is_authenticated %}
+    {% if not user.is_authenticated %}
     <a href="{% url 'login' %}">Login</a>
     <a href="{% url 'register' %}">Register</a>
     {% else %}
     <a href="{% url 'index' %}">Home</a>
     <a href="{% url 'all-products' %}">Products</a>
     <a href="{% url 'create-transaction' %}">Create Transaction</a>
-    <a href="{% url 'logout' %}">Logout</a>
+    <form method="post" action={% url 'logout' %}>
+        {% csrf_token %}
+        <button type="submit">Logout</button>
+    </form>
     {% endif %}
 </nav>
