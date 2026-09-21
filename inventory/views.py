@@ -11,14 +11,14 @@ from .forms import RegisterForm
 class RegisterView(View):
     def get(self, request):
         form = RegisterForm()
-        return render(request, "register.html", {"form": form})
+        return render(request, "inventory/register.html", {"form": form})
 
     def post(self, request):
         form = RegisterForm(request.POST)
         if form.is_valid():
             form.save()
             return redirect("login")
-        return render(request, "register.html", {"form": form})
+        return render(request, "inventory/register.html", {"form": form})
 
 class ProductsViewList(ListView):
     template_name = "inventory/view_all_products.html"
@@ -39,19 +39,23 @@ class TransactionView(LoginRequiredMixin, View):
         if posted_form.is_valid():
             transaction = posted_form.save(commit=False)
            
-            user = transaction.user
+            transaction.user = request.user
             product = transaction.product
-            print("BEFORE", product.quantity)
+            if product.quantity >= transaction.quantity:
+                if transaction.type == "IN":
+                    product.quantity += transaction.quantity
+                elif transaction.type == "OUT":
+                    product.quantity -= transaction.quantity
 
-            if transaction.type == "IN":
-                product.quantity += transaction.quantity
-            elif transaction.type == "OUT":
-                product.quantity -= transaction.quantity
-
-            product.save()
-            transaction.save()
-            print("AFTER", product.quantity)
-            return HttpResponseRedirect("/create-transaction")
+                product.save()
+                transaction.save()
+                return HttpResponseRedirect("/create-transaction")
+            else:
+                posted_form.add_error(
+                "quantity",
+                f"Not enough stock. Available quantity: {product.quantity}"
+            )
+                return render(request, "inventory/create_transaction.html", {"form": posted_form})
         else:
             print("INVALID")
     
